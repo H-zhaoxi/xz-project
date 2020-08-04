@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function list(){
+            var xhr=new XMLHttpRequest();
+            xhr.onreadystatechange=function(){
+                if(xhr.readyState==4 && xhr.status==200){
+                    var r=xhr.responseText;
+                    var arr=JSON.parse(r);
+                    var htmlstr=`
+                        <table border=1>
+                            <tr>
+                                <th>姓名</th>
+                                <th>密码</th>    
+                                <th>邮箱</th>
+                                <th>电话</th>
+                                <th>用户</th>
+                                <th>性别</th>
+                                <th>操作</th>
+                            </tr>
+                    `
+                    for(var i in arr){
+                        var sex='未知';
+                        if(arr[i].gender==1){
+                            sex='男'
+                        }else if(arr[i].gender==0){
+                            sex='女'
+                        }else{
+                            sex='未知'
+                        }
+                        htmlstr+=`
+                            <tr>
+                                <td>${arr[i].uname}</td>
+                                <td>${arr[i].upwd}</td>    
+                                <td>${arr[i].email}</td>
+                                <td>${arr[i].phone}</td>
+                                <td>${arr[i].user_name}</td>
+                                <td>${sex}</td>
+                                <td>
+                                    <a href="javascript:del(${arr[i].uid})">删除</a>
+                                    <a href="search.html?uid=${arr[i].uid}">修改</a>
+                                </td>
+                            </tr>
+                        `
+                    }
+                    htmlstr+=`</table>`;
+                    d.innerHTML=htmlstr;
+                    if(r==0){
+                        alert('操作失败')
+                    }
+                }
+            }
+            xhr.open('get','/pro/list',true);
+            xhr.send();
+        }
+        function del(uid){
+            /*
+            var $uid=uid.value;
+            if(!$uid){
+                alert('编号不能为空');
+                return;
+            }*/
+            var xhr=new XMLHttpRequest();
+            xhr.onreadystatechange=function(){
+                if(xhr.readyState==4 && xhr.status==200){
+                    var r=xhr.responseText;
+                    if(r==1){
+                        alert('删除成功');
+                        list();
+                    }else{
+                        alert('删除失败')
+                    }
+                }
+            }
+            xhr.open('delete','/pro/del/'+uid,true);
+            xhr.send();
+        }
+    </script>
+</head>
+<body onload="list()">
+    <div id="d"></div>   
+</body>
+</html>

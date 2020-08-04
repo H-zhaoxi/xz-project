@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        var isOk=false;
+        function uname_msg(){
+            msg_uname.innerHTML="请输入姓名";
+        }
+        function check(){
+            var $uname=uname.value;
+            if(!$uname){
+                msg_uname.innerHTML="姓名不能为空";
+                isOk=false;
+            }else if($uname.length<3 || $uname.length>6){
+                msg_uname.innerHTML="请输入3至6位数的姓名";
+                isOk=false;
+            }else{
+                var xhr=new XMLHttpRequest();
+                xhr.onreadystatechange=function(){
+                    if(xhr.readyState==4 && xhr.status==200){
+                        var r=xhr.responseText;
+                        if(r==1){
+                            msg_uname.innerHTML='姓名已存在，不允许注册';
+                            isOk=false;
+                        }else{
+                            msg_uname.innerHTML='允许注册';
+                            isOk=true;
+                        }
+                    }
+                }
+                xhr.open('get','/pro/search_uname/'+$uname,true);
+                xhr.send();
+            }
+        }
+
+        function reg(){
+            if(!isOk){alert('信息错误');return;}
+        }
+    </script>
+</head>
+<body>
+    姓名<input onfocus="uname_msg()" onblur="check()" type="text" id="uname">
+    <span id="msg_uname"></span><br>
+    密码<input type="text" id="upwd"><br>
+    电话<input onfocus="phone_msg()" onblur="check_phone()" type="text" id="phone">
+    <span id="msg_phone"></span><br>
+    邮箱<input type="text" id="email"><br>
+    用户名<input type="text" id="use_name"><br>
+    性别<input type="radio" name="gender" id="man">
+    <label for="man">男</label>
+    <input type="radio" name="gender" id="woman">
+    <label for="woman">女</label>
+    <input type="radio" name="gender" id="unk">
+    <label for="unk">保密</label><br>
+    <button onclick="reg()">注册</button>
+</body>
+</html>

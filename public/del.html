@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function del(){
+            var $uid=uid.value;
+            if(!$uid){
+                alert('编号不能为空');
+                return;
+            }
+            var xhr=new XMLHttpRequest();
+            xhr.onreadystatechange=function(){
+                if(xhr.readyState==4 && xhr.status==200){
+                    var r=xhr.responseText;
+                    if(r==1){
+                        alert('删除成功')
+                    }else{
+                        alert('删除失败')
+                    }
+                }
+            }
+            xhr.open('delete','/pro/del/'+$uid,true);
+            xhr.send();
+        }
+    </script>
+</head>
+<body>
+    编号<input type="text" id="uid"><br>
+    <button onclick="del()">删除</button>
+</body>
+</html>
